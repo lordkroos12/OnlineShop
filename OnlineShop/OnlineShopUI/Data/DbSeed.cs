@@ -12,7 +12,7 @@ namespace OnlineShopUI.Data
             await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
 
-            //create account with admin role
+            //creating account with admin role
 
             var admin = new IdentityUser
             {

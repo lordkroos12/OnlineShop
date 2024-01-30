@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopUI.Data;
 
@@ -11,9 +12,11 @@ using OnlineShopUI.Data;
 namespace OnlineShopUI.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240125123742_add-manifacurer-parts")]
+    partial class addmanifacurerparts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,7 +223,7 @@ namespace OnlineShopUI.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShopUI.Models.CartDetail", b =>
+            modelBuilder.Entity("OnlineShopUI.Models.CartInformation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,14 +234,17 @@ namespace OnlineShopUI.Data.Migrations
                     b.Property<int>("PartId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Part_Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("ShoppingCartId")
                         .HasColumnType("int");
 
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
+                    b.Property<int>("ShoppingCart_Id")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -450,7 +456,7 @@ namespace OnlineShopUI.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OnlineShopUI.Models.CartDetail", b =>
+            modelBuilder.Entity("OnlineShopUI.Models.CartInformation", b =>
                 {
                     b.HasOne("OnlineShopUI.Models.Part", "Part")
                         .WithMany("CartInfo")
@@ -459,7 +465,7 @@ namespace OnlineShopUI.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("OnlineShopUI.Models.ShoppingCart", "ShoppingCart")
-                        .WithMany("CartInformations")
+                        .WithMany()
                         .HasForeignKey("ShoppingCartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -525,11 +531,6 @@ namespace OnlineShopUI.Data.Migrations
                     b.Navigation("CartInfo");
 
                     b.Navigation("OrderInfo");
-                });
-
-            modelBuilder.Entity("OnlineShopUI.Models.ShoppingCart", b =>
-                {
-                    b.Navigation("CartInformations");
                 });
 #pragma warning restore 612, 618
         }

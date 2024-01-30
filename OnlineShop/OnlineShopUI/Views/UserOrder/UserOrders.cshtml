@@ -1,0 +1,104 @@
+﻿@model OrdersAndStatusModel
+@{
+	ViewData["Title"] = "GetUserCart";
+	var userAction = Model.UserOrders;
+	if (User.IsInRole("Admin"))
+	{
+		userAction = Model.AllOrders;
+	}
+	
+}
+
+<div style="width:90%;margin:auto" class="mt-2">
+	<a class="btn btn-primary my-2" href="/Identity/Account/Manage">Back</a>
+	@if (Model.UserOrders != null && Model.UserOrders.Count() > 0)
+	{
+		<table class="table table-border"  style="border-spacing: 0 100px;">
+			<tr>
+				<th>Order Date</th>
+				<th>Order Status</th>
+			</tr>
+			
+			@foreach (var order in userAction)
+		{
+				<form asp-action= "EditStatus" class="row row-cols-lg-auto g-3 align-items-center">
+					@{
+					Model.orderId = order.Id;
+				}	
+				@Html.HiddenFor(m=>m.orderId);
+				<tr>
+					<td>@order.DateOfCreation.ToString("dd-MM-yyyy")</td>
+
+					<td>
+						@if (User.IsInRole("Admin")) 
+					{
+						<select class="form-select" id="statusId" name="statusId">
+						<option selected>Choose...</option>
+						@foreach (var status in Model.Status)
+						{
+							<option selected="@(order.OrderStatusId == status.StatusId)" value="@status.StatusId">@status.Status</option>
+						}
+						</select>
+							<td><button type="submit" class="btn btn-primary">Save</button></td>
+						}
+					else
+					{
+						<td>@order.OrderStatus.Status</td>
+					}
+					</td>
+				</tr>	
+					@if (order != null && order.OrderInfo.Count > 0)
+					{
+					<tr>
+										<td>
+											<div class="my-2">
+												<h5>Total Price: @order.OrderInfo.Select(x => x.Part.Price * x.Quantity).Sum()$</h5>
+											</div>
+											<table class="table table-striped mt-2">
+						<thead>
+							<tr>
+								<th>Image</th>
+								<th>Part Name</th>
+								<th>Category</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Total Price</th>
+							</tr>
+						</thead>
+						<tbody>
+
+										@foreach (var item in order.OrderInfo)
+										{
+										<tr>
+											<td>
+													@if (string.IsNullOrEmpty(@item.Part.Image))
+													{
+													<img src ="~/images/noimage.png" width="100px;">
+													}
+													else
+													{
+													<img src ="~/images/@item.Part.Image" width="100px;">
+													}
+											</td>
+											<td>@item.Part.PartName</td>
+											<td>@item.Part.category.CategoryName</td>
+											<td>@item.Part.Price$</td>
+											<td>@item.Quantity</td>
+											<td> @order.OrderInfo.Where(x => x.Part.Id == item.Part.Id).Select(x => x.Part.Price * x.Quantity).Sum()$</td>
+										</tr>
+										}
+						</tbody>
+					</table>
+										</td>
+									</tr>						
+					}
+				</form>		
+			}
+			</table>
+			@if (User.IsInRole("Admin"))
+		{
+			
+		}
+			
+	}
+</div>

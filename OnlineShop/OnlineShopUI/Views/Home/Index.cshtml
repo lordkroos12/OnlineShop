@@ -1,8 +1,82 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model PartDisplayModel
+@{
+
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="my-2">
+	<form asp-action= "Index" class="row row-cols-lg-auto g-3 align-items-center">
+		<div class="col-12">
+			<label class="visually-hidden" for="categoryId">Categories</label>
+			<select class="form-select" id="categoryId" name="categoryId">
+				<option selected>Choose...</option>
+				@foreach (var category in Model.Categories)
+				{
+					<option selected="@(category.Id == @Model.CategoryId)" value="@category.Id">@category.CategoryName</option>
+				}
+			</select>
+		</div>
+
+		<div class="col-12">
+			<label class="visually-hidden" for="searchTerm">Search product</label>
+			<div class="input-group">
+				<div class="input-group-text"></div>
+				<input type="text" class="form-control" value="@Model.SearchTerm" id="searchTerm" name="searchTerm" placeholder="Search product">
+			</div>
+		</div>
+
+		<div class="col-12">
+			<button type="submit" class="btn btn-primary">Search</button>
+			<a href="/Home/Index" class="btn btn-primary">Reset</a>
+		</div>
+	</form>
 </div>
+<div class="w-100 mt-4 d-flex flex-wrap">
+	@foreach(var part in Model.Parts)
+	{
+		<div class="card mx-2 mb-4" style="width: 16rem;">
+			@if (string.IsNullOrEmpty(@part.Image))
+			{
+				<img src="/images/@part.Image" style="width:100%; height:200px" class="card-img-top" alt="Can't load picture">
+			}
+			else
+			{
+				<img src="/images/noimage.png" style="width:100%; height:200px" class="card-img-top" alt="Can't load picture">
+			}
+			
+			<div class="card-body">
+				<h5 class="card-title"><b>@part.PartName</b></h5>
+				<p class="card-text">
+				<p><b>Category: </b>@part.CategoryName</p>
+				<p><b>Manifacturer: </b>@part.ManifacturerName</p>
+				<p><b>Price: </b>@part.Price$</p>
+				</p>
+				<button type="button" onclick="add(@part.Id)" class="btn btn-primary">Add to cart</button>
+			</div>
+		</div>
+	}
+
+</div>
+
+@section Scripts{
+	<script>
+		async function add(partId) { 
+			try {
+				var response = await fetch(`/Cart/AddItem?partId=${partId}`)
+				if (response.status == 200)
+				{ 
+					var result = await response.json();
+					console.log(result);
+					var countEl = document.getElementById("cartCount");
+					countEl.innerHTML = result;
+				}
+				
+			}
+			catch (err) { 
+			console.log(err)
+			}
+		
+		}
+	</script>
+
+}

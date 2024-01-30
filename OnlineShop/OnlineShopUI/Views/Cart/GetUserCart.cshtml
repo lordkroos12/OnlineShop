@@ -1,0 +1,60 @@
+﻿@model ShoppingCart
+@{
+	ViewData["Title"] = "GetUserCart";
+}
+<div style="width:100%;margin:auto;" class="my-2">
+	@if (Model != null && Model.CartInformations != null && Model.CartInformations.Count > 0)
+	{
+
+
+		<table class="table table-responsive table-bordered">
+			<thead>
+				<tr>
+					<th>Image</th>
+					<th>Part Name</th>
+					<th>Category</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Total Price</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				@foreach (var item in Model.CartInformations)
+				{
+						<tr>
+							<td>
+							@if (string.IsNullOrEmpty(@item.Part.Image))
+							{
+										<img src ="~/images/noimage.png" width="100px;">
+							}
+							else
+							{
+										<img src ="~/images/@item.Part.Image" width="100px;">
+							}
+							</td>
+							<td>@item.Part.PartName</td>
+							<td>@item.Part.category.CategoryName</td>
+							<td>@item.Part.Price$</td>
+							<td>@item.Quantity</td>
+							<td> @Model.CartInformations.Where(x=>x.Part.Id==item.Part.Id).Select(x=>x.Part.Price*x.Quantity).Sum()$</td>
+							<td>
+								<a class="btn btn-info" href="/Cart/AddItem?partId=@item.PartId&&redirect=1">+</a>
+								<a class="btn btn-info" href="/Cart/RemoveItem?partId=@item.PartId">-</a>
+							</td>
+						</tr>
+				}
+			</tbody>
+		</table>
+		<div class="my-2">
+			<h5>Total Price: @Model.CartInformations.Select(x=>x.Part.Price*x.Quantity).Sum()$</h5>
+			<a class="btn btn-info" href="/Cart/Checkout">Checkout</a>
+		</div>
+	}
+	else
+	{
+		<h5>The cart is empty!</h5>
+	}
+</div>
+

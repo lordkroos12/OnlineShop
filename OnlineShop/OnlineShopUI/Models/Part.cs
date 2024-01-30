@@ -10,8 +10,11 @@ namespace OnlineShopUI.Models
         [Required]
         [MaxLength(30)]
         public string? PartName { get; set; }
-        
-        public string Image { get; set; }
+
+		[Required]
+		[MaxLength(30)]
+		public string? ManifacturerName { get; set; }
+		public string Image { get; set; }
         public double Price { get; set; }
         public int CategoryId { get; set; }
 
@@ -19,6 +22,9 @@ namespace OnlineShopUI.Models
         public Category? category { get; set; }
 
         public List<OrderInformation> OrderInfo { get; set; }
-        public List<CartInformation> CartInfo { get; set; }
+        public List<CartDetail> CartInfo { get; set; }
+
+        [NotMapped]
+        public string CategoryName { get; set; }
     }
 }

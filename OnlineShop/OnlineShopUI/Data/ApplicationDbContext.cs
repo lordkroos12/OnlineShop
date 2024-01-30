@@ -10,7 +10,7 @@ namespace OnlineShopUI.Data
             : base(options)
         {
         }
-        public DbSet<CartInformation>  CartInformations { get; set; }
+        public DbSet<CartDetail>  CartInformations { get; set; }
         public DbSet<Category>  Categories { get; set; }
         public DbSet<Order>  Orders  { get; set; }
         public DbSet<OrderInformation>  OrderInformations  { get; set; }
